@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/RestraurantCard widget/constants/color.dart';
 import 'package:flutter_application_1/etc/constant.dart';
+import 'package:flutter_application_1/labels/dashboard/search_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -112,7 +113,14 @@ class CartScreen extends StatelessWidget {
                   width: 126,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const SearchScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPink,
                       foregroundColor: Colors.white,

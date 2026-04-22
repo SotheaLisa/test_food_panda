@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/RestraurantCard widget/constants/color.dart';
+import 'package:flutter_application_1/labels/dashboard/account_feature_screens.dart';
 import 'setting.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -143,7 +144,10 @@ class AccountScreen extends StatelessWidget {
                     child: _ActionCard(
                       icon: Icons.receipt_long_outlined,
                       label: 'Orders',
-                      onTap: () {},
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const OrdersScreen()),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -151,7 +155,12 @@ class AccountScreen extends StatelessWidget {
                     child: _ActionCard(
                       icon: Icons.favorite_border,
                       label: 'Favourites',
-                      onTap: () {},
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const FavouritesScreen(),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -163,7 +172,12 @@ class AccountScreen extends StatelessWidget {
                     child: _ActionCard(
                       icon: Icons.credit_card_outlined,
                       label: 'Payments',
-                      onTap: () {},
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const PaymentMethodsScreen(),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -171,7 +185,12 @@ class AccountScreen extends StatelessWidget {
                     child: _ActionCard(
                       icon: Icons.location_on_outlined,
                       label: 'Addresses',
-                      onTap: () {},
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AddressesScreen(),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -342,7 +361,7 @@ class _ActionCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 6,
               offset: const Offset(0, 2),
             ),

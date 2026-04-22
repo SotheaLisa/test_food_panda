@@ -85,23 +85,42 @@ class _FoodHeader extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           child: Column(
             children: [
-              // FIX: Expanded on text so it never overflows the row
               Row(
-                children: const [
-                  Icon(Icons.location_on_outlined,
-                      color: Colors.white, size: 20),
-                  SizedBox(width: 6),
+                children: [
                   Expanded(
-                    child: Text(
-                      'Selected location',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
-                      overflow: TextOverflow.ellipsis,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () => showModalBottomSheet<void>(
+                        context: context,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        builder: (_) => const _FoodLocationBottomSheet(),
+                      ),
+                      child: const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 6),
+                        child: Row(
+                          children: [
+                            Icon(Icons.location_on_outlined,
+                                color: Colors.white, size: 20),
+                            SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                'Selected location',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  Icon(Icons.favorite_border,
+                  const SizedBox(width: 8),
+                  const Icon(Icons.favorite_border,
                       color: Colors.white, size: 24),
                 ],
               ),
@@ -132,6 +151,166 @@ class _FoodHeader extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FoodLocationBottomSheet extends StatelessWidget {
+  const _FoodLocationBottomSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.language, color: Colors.black87, size: 28),
+                const SizedBox(width: 14),
+                Container(
+                  width: 24,
+                  height: 18,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF032EA1),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                  child: const Text(
+                    'KH',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                const Expanded(
+                  child: Text(
+                    'Cambodia',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'Change',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Divider(color: Colors.grey.shade300),
+            const SizedBox(height: 18),
+            const Row(
+              children: [
+                Icon(Icons.near_me_outlined, color: Colors.black87),
+                SizedBox(width: 12),
+                Text(
+                  'Use my current location',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 22),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF7F7F7),
+                borderRadius: BorderRadius.circular(22),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(22),
+                    ),
+                    child: SizedBox(
+                      height: 170,
+                      width: double.infinity,
+                      child: Image.network(
+                        'https://www.indochina.tours/wp-content/uploads/2016/10/Cambodia-Map1-1024x768.jpg',
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey.shade200,
+                            alignment: Alignment.center,
+                            child: const Icon(
+                              Icons.broken_image_outlined,
+                              size: 42,
+                              color: Colors.grey,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(18, 16, 18, 18),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Selected location',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          'Phnom Penh',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            const Row(
+              children: [
+                Icon(Icons.add, color: Colors.black87, size: 28),
+                SizedBox(width: 14),
+                Text(
+                  'Add New Address',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
