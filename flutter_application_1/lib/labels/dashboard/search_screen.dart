@@ -14,6 +14,61 @@ class _SearchScreenState extends State<SearchScreen> {
   static const String _keyboardImageUrl =
       'https://beconnected.esafety.gov.au/pluginfile.php/86778/mod_resource/content/2/images/BC%203%20-%202a.png';
 
+  static const List<Map<String, String>> _browseCategories = [
+    {
+      'label': 'Khmer New\nYear',
+      'image':
+          'https://static.vecteezy.com/system/resources/thumbnails/043/030/930/small/happy-khmer-new-year-vector.jpg',
+    },
+    {
+      'label': 'Groceries',
+      'image':
+          'https://i.pinimg.com/1200x/60/c7/b3/60c7b3e11b79c1529b8741048f526b9d.jpg',
+    },
+    {
+      'label': 'Convenience',
+      'image':
+          'https://i.pinimg.com/1200x/37/58/fd/3758fd8c93654ec516d0635134a076d2.jpg',
+    },
+    {
+      'label': 'Beverages\n& Alcohol',
+      'image':
+          'https://i.pinimg.com/736x/86/2d/31/862d311a95bdcd29f191d14fb2cbb780.jpg',
+    },
+    {
+      'label': 'Bakery',
+      'image':
+          'https://i.pinimg.com/1200x/3f/29/6f/3f296f9a562dfc4ec090de048f67b59b.jpg',
+    },
+  ];
+
+  static const List<Map<String, String>> _popularShops = [
+    {
+      'name': 'Chip Mong\nSupermarket...',
+      'time': '15-45 min',
+      'image':
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqWb3y6VEA-huZg6U1MWrGJElHtyM4UsEoPA&s',
+    },
+    {
+      'name': 'Lucky\nSupermarket',
+      'time': '25-50 min',
+      'image':
+          'https://www.dfilucky.com/logo.png',
+    },
+    {
+      'name': 'AEON',
+      'time': '5-30 min',
+      'image':
+          'https://yt3.googleusercontent.com/-GOuQcQWIOzYibpMEO9kYZzKhqergcwHThY4-oQvG4MK27HWHuMpBtFkRt7rluGiFsvuJAeKvA=s900-c-k-c0x00ffffff-no-rj',
+    },
+    {
+      'name': 'Aeon MaxValu\nSupermarket...',
+      'time': '10-35 min',
+      'image':
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpy52L4vPX3zzsTDFoP6foIcQNeYAIhDaiVQ&s',
+    },
+  ];
+
   static const List<String> _popularSearches = [
     'pharmacy',
     'aeon',
@@ -34,7 +89,7 @@ class _SearchScreenState extends State<SearchScreen> {
       'time': '15-40 min',
       'rating': 4.5,
       'image':
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAtV7wUW0l62mmbcHx49fB8WTsvrKKP65aQA&s'
+          'https://www.dfilucky.com/logo.png'
     },
     {
       'name': 'Chip Mong Supermarket',
@@ -50,7 +105,7 @@ class _SearchScreenState extends State<SearchScreen> {
       'time': '5-30 min',
       'rating': 4.1,
       'image':
-          'https://companieslogo.com/img/orig/8267.T-a5b1f27a.png?t=1720244490'
+          'https://yt3.googleusercontent.com/-GOuQcQWIOzYibpMEO9kYZzKhqergcwHThY4-oQvG4MK27HWHuMpBtFkRt7rluGiFsvuJAeKvA=s900-c-k-c0x00ffffff-no-rj'
     },
     {
       'name': 'Aeon MaxValu',
@@ -204,6 +259,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: _query.isEmpty
                           ? _PopularSearches(
                               searches: _popularSearches,
+                              categories: _browseCategories,
+                              popularShops: _popularShops,
                               onSelected: (value) {
                                 _setQuery(value);
                                 _searchFocusNode.requestFocus();
@@ -241,10 +298,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
 class _PopularSearches extends StatelessWidget {
   final List<String> searches;
+  final List<Map<String, String>> categories;
+  final List<Map<String, String>> popularShops;
   final ValueChanged<String> onSelected;
 
   const _PopularSearches({
     required this.searches,
+    required this.categories,
+    required this.popularShops,
     required this.onSelected,
   });
 
@@ -294,6 +355,136 @@ class _PopularSearches extends StatelessWidget {
                   ),
                 )
                 .toList(),
+          ),
+          const SizedBox(height: 28),
+          SizedBox(
+            height: 126,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: categories.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (_, i) {
+                final item = categories[i];
+                return SizedBox(
+                  width: 84,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFFF4E7),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Image.network(
+                            item['image']!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(
+                                Icons.image_outlined,
+                                color: Colors.orange,
+                                size: 30,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        item['label']!,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 26),
+          const Text(
+            'Popular Shops',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w800,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 14),
+          SizedBox(
+            height: 158,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: popularShops.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (_, i) {
+                final shop = popularShops[i];
+                return SizedBox(
+                  width: 100,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 96,
+                        height: 96,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(18),
+                          border: Border.all(
+                            color: kPink.withValues(alpha: 0.30),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              shop['image']!,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.store,
+                                  color: kPink,
+                                  size: 40,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        shop['name']!,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        shop['time']!,
+                        style: const TextStyle(
+                          fontSize: 10,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

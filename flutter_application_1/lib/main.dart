@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/labels/dashboard/splash_screen.dart';
 
@@ -13,6 +14,7 @@ class FoodDeliveryApp extends StatelessWidget {
     return MaterialApp(
       title: 'Food Delivery',
       debugShowCheckedModeBanner: false,
+      scrollBehavior: const _AppScrollBehavior(),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFE91E8C)),
         useMaterial3: true,
@@ -21,4 +23,17 @@ class FoodDeliveryApp extends StatelessWidget {
       home: const SplashScreen(),
     );
   }
+}
+
+class _AppScrollBehavior extends MaterialScrollBehavior {
+  const _AppScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+        PointerDeviceKind.trackpad,
+        PointerDeviceKind.stylus,
+        PointerDeviceKind.unknown,
+      };
 }

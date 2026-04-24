@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/RestraurantCard widget/constants/color.dart';
 import 'package:flutter_application_1/etc/constant.dart';
@@ -5,6 +6,38 @@ import 'package:flutter_application_1/pages/model/exclusive_panda/exclusive_help
 import 'package:flutter_application_1/pages/model/panda_pick_m/panda_pick_helper.dart';
 
 import 'detail_screen.dart';
+
+Map<String, String>? _networkImageHeaders(String url) {
+  final uri = Uri.tryParse(url);
+  final host = uri?.host.toLowerCase() ?? '';
+
+  if (host.contains('pngtree.com')) {
+    return const {
+      'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      'Referer': 'https://pngtree.com/',
+    };
+  }
+
+  if (host.contains('vecteezy.com')) {
+    return const {
+      'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+      'Referer': 'https://www.vecteezy.com/',
+    };
+  }
+
+  return null;
+}
+
+String? _fallbackImageUrl(String url) {
+  if (url ==
+      'https://png.pngtree.com/png-vector/20231121/ourmid/pngtree-dragon-rolls-a-ceramic-plate-png-image_10679575.png') {
+    return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQKzdmFUAHqL_xJERUDyv-Q6MYpZgPoHAOdw&s';
+  }
+
+  return null;
+}
 
 class FoodScreen extends StatelessWidget {
   const FoodScreen({super.key});
@@ -683,63 +716,107 @@ class _PandaPicksList extends StatelessWidget {
     final picks = PandaPickHelper.getPandaPicks();
     return SizedBox(
       height: 128,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemCount: picks.length,
-        itemBuilder: (_, i) {
-          final p = picks[i];
-          return GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => DetailScreen(title: p.name)),
-            ),
-            child: Container(
-              width: 108,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade200),
+      child: ScrollConfiguration(
+        behavior: const MaterialScrollBehavior().copyWith(
+          dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+            PointerDeviceKind.trackpad,
+            PointerDeviceKind.stylus,
+          },
+        ),
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemCount: picks.length,
+          itemBuilder: (_, i) {
+            final p = picks[i];
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => DetailScreen(title: p.name)),
               ),
-              // FIX: use padding + mainAxisSize.min so Column fits the box
-              padding: const EdgeInsets.symmetric(
-                  vertical: 8, horizontal: 6),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: const BoxDecoration(
-                        color: kPinkLight, shape: BoxShape.circle),
-                    child:
-                        const Icon(Icons.fastfood, color: kPink, size: 22),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    p.name,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 10),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    p.deliveryTime,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                        color: Colors.grey, fontSize: 9),
-                  ),
-                ],
+              child: Container(
+                width: 108,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 8, horizontal: 6),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: const BoxDecoration(
+                          color: kPinkLight, shape: BoxShape.circle),
+                      child: ClipOval(
+                        child: p.imageUrl.isEmpty
+                            ? const Icon(
+                                Icons.fastfood,
+                                color: kPink,
+                                size: 22,
+                              )
+                            : Image.network(
+                                p.imageUrl,
+                                headers: _networkImageHeaders(p.imageUrl),
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) {
+                                  final fallbackUrl =
+                                      _fallbackImageUrl(p.imageUrl);
+                                  if (fallbackUrl != null) {
+                                    return Image.network(
+                                      fallbackUrl,
+                                      fit: BoxFit.contain,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return const Icon(
+                                          Icons.fastfood,
+                                          color: kPink,
+                                          size: 22,
+                                        );
+                                      },
+                                    );
+                                  }
+
+                                  return const Icon(
+                                    Icons.fastfood,
+                                    color: kPink,
+                                    size: 22,
+                                  );
+                                },
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      p.name,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 10),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      p.deliveryTime,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: Colors.grey, fontSize: 9),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -753,66 +830,142 @@ class _ExclusiveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = ExclusiveHelper.getExclusiveItems();
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: items.length,
-      separatorBuilder: (_, __) =>
-          const Divider(height: 1, indent: 16, endIndent: 16),
-      itemBuilder: (_, i) {
-        final item = items[i];
-        return ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          leading: Container(
-            width: 50,
-            height: 50,
-            decoration: const BoxDecoration(
-                color: kPinkLight, shape: BoxShape.circle),
-            child: const Icon(Icons.star, color: kPink, size: 26),
-          ),
-          title: Text(
-            item.name,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 13),
-            overflow: TextOverflow.ellipsis,
-          ),
-          subtitle: Text(
-            item.restaurant,
-            style: const TextStyle(color: Colors.grey, fontSize: 11),
-            overflow: TextOverflow.ellipsis,
-          ),
-          // FIX: mainAxisSize.min prevents trailing Column from overflowing
-          trailing: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.star, color: Colors.amber, size: 12),
-                  const SizedBox(width: 2),
-                  Text(item.rating.toStringAsFixed(1),
-                      style: const TextStyle(fontSize: 11)),
-                ],
+    return SizedBox(
+      height: 148,
+      child: ScrollConfiguration(
+        behavior: const MaterialScrollBehavior().copyWith(
+          dragDevices: {
+            PointerDeviceKind.touch,
+            PointerDeviceKind.mouse,
+            PointerDeviceKind.trackpad,
+            PointerDeviceKind.stylus,
+          },
+        ),
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: items.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 12),
+          itemBuilder: (_, i) {
+            final item = items[i];
+            return GestureDetector(
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => DetailScreen(title: item.name)),
               ),
-              const SizedBox(height: 2),
-              Text(
-                '\$${item.price.toStringAsFixed(2)}',
-                style: const TextStyle(
-                    color: kPink,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13),
+              child: Container(
+                width: 220,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: Colors.grey.shade200),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: kPinkLight,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      child: item.imageUrl.isEmpty
+                          ? const Icon(Icons.star, color: kPink, size: 28)
+                          : Image.network(
+                              item.imageUrl,
+                              headers: _networkImageHeaders(item.imageUrl),
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) {
+                                final fallbackUrl =
+                                    _fallbackImageUrl(item.imageUrl);
+                                if (fallbackUrl != null) {
+                                  return Image.network(
+                                    fallbackUrl,
+                                    fit: BoxFit.contain,
+                                    errorBuilder:
+                                        (context, error, stackTrace) {
+                                      return const Icon(
+                                        Icons.star,
+                                        color: kPink,
+                                        size: 28,
+                                      );
+                                    },
+                                  );
+                                }
+
+                                return const Icon(
+                                  Icons.star,
+                                  color: kPink,
+                                  size: 28,
+                                );
+                              },
+                            ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            item.restaurant,
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              const Icon(Icons.star,
+                                  color: Colors.amber, size: 14),
+                              const SizedBox(width: 4),
+                              Text(
+                                item.rating.toStringAsFixed(1),
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '\$${item.price.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  color: kPink,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => DetailScreen(title: item.name)),
-          ),
-        );
-      },
+            );
+          },
+        ),
+      ),
     );
   }
 }

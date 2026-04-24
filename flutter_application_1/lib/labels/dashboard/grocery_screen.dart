@@ -12,7 +12,7 @@ class GroceryScreen extends StatelessWidget {
     {
       'label': 'Khmer New\nYear',
       'image':
-          'https://png.pngtree.com/png-vector/20230330/ourmid/pngtree-khmer-illustrator-new-for-year-vector-png-image_6675329.png'
+          'https://static.vecteezy.com/system/resources/thumbnails/043/030/930/small/happy-khmer-new-year-vector.jpg'
     },
     {
       'label': 'Groceries',
@@ -47,13 +47,13 @@ class GroceryScreen extends StatelessWidget {
       'name': 'Lucky\nSupermarket',
       'time': '25-50 min',
       'image':
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAtV7wUW0l62mmbcHx49fB8WTsvrKKP65aQA&s'
+          'https://www.dfilucky.com/logo.png'
     },
     {
       'name': 'AEON',
       'time': '5-30 min',
       'image':
-          'https://companieslogo.com/img/orig/8267.T-a5b1f27a.png?t=1720244490'
+          'https://yt3.googleusercontent.com/-GOuQcQWIOzYibpMEO9kYZzKhqergcwHThY4-oQvG4MK27HWHuMpBtFkRt7rluGiFsvuJAeKvA=s900-c-k-c0x00ffffff-no-rj'
     },
     {
       'name': 'Aeon MaxValu\nSupermarl...',
@@ -242,7 +242,7 @@ class GroceryScreen extends StatelessWidget {
                     isFreeDelivery: true,
                     discount: AppConstants.discountOff17,
                     imageUrl:
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAtV7wUW0l62mmbcHx49fB8WTsvrKKP65aQA&s',
+                        'https://www.dfilucky.com/logo.png',
                   ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
                   RestaurantCard(
@@ -261,7 +261,7 @@ class GroceryScreen extends StatelessWidget {
                     rating: 4.1,
                     discount: '\$2 off \$12',
                     imageUrl:
-                        'https://companieslogo.com/img/orig/8267.T-a5b1f27a.png?t=1720244490',
+                        'https://yt3.googleusercontent.com/-GOuQcQWIOzYibpMEO9kYZzKhqergcwHThY4-oQvG4MK27HWHuMpBtFkRt7rluGiFsvuJAeKvA=s900-c-k-c0x00ffffff-no-rj',
                   ),
                   const SizedBox(height: 24),
                 ],
