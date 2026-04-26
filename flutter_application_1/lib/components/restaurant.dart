@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/RestraurantCard widget/constants/color.dart';
+
 class RestaurantCard extends StatelessWidget {
   final String name;
   final String subtitle;
@@ -34,6 +35,7 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
@@ -80,16 +82,24 @@ class RestaurantCard extends StatelessWidget {
                       const SizedBox(width: 3),
                       Text(
                         rating.toStringAsFixed(1),
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
                       ),
                       const SizedBox(width: 8),
-                      const Icon(Icons.access_time,
-                          color: Colors.grey, size: 13),
+                      const Icon(
+                        Icons.access_time,
+                        color: Colors.grey,
+                        size: 13,
+                      ),
                       const SizedBox(width: 3),
                       Text(
                         time,
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),
@@ -110,7 +120,9 @@ class RestaurantCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: kPinkLight,
                         borderRadius: BorderRadius.circular(6),
@@ -118,8 +130,11 @@ class RestaurantCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.discount_outlined,
-                              color: kPink, size: 12),
+                          const Icon(
+                            Icons.discount_outlined,
+                            color: kPink,
+                            size: 12,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             discount!,
@@ -131,6 +146,24 @@ class RestaurantCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                    ),
+                  ],
+                  if (onTap != null) ...[
+                    const SizedBox(height: 6),
+                    const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'View details',
+                          style: TextStyle(
+                            color: kPink,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(width: 3),
+                        Icon(Icons.arrow_forward_ios, color: kPink, size: 10),
+                      ],
                     ),
                   ],
                 ],

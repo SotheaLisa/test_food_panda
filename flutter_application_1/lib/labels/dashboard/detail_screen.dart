@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/RestraurantCard widget/constants/color.dart';
+import 'package:flutter_application_1/labels/dashboard/cart_screen.dart';
+import 'package:flutter_application_1/services/order_store.dart';
 
 Map<String, String>? _detailImageHeaders(String url) {
   final uri = Uri.tryParse(url);
@@ -80,8 +82,9 @@ class DetailScreen extends StatelessWidget {
                     headers: _detailImageHeaders(details.heroImageUrl),
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
-                      final fallbackUrl =
-                          _detailFallbackImageUrl(details.heroImageUrl);
+                      final fallbackUrl = _detailFallbackImageUrl(
+                        details.heroImageUrl,
+                      );
                       if (fallbackUrl != null) {
                         return Image.network(
                           fallbackUrl,
@@ -160,8 +163,11 @@ class DetailScreen extends StatelessWidget {
                               ),
                               child: Row(
                                 children: [
-                                  const Icon(Icons.star,
-                                      color: Colors.amber, size: 14),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: 14,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(
                                     details.rating,
@@ -175,6 +181,16 @@ class DetailScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        if (details.subtitle.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          Text(
+                            details.subtitle,
+                            style: const TextStyle(
+                              color: Colors.black54,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
                         const SizedBox(height: 8),
                         Wrap(
                           spacing: 10,
@@ -193,6 +209,46 @@ class DetailScreen extends StatelessWidget {
                               label: details.offerLabel,
                             ),
                           ],
+                        ),
+                        const SizedBox(height: 18),
+                        _DetailSection(
+                          title: 'About',
+                          child: Text(
+                            details.about,
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 13,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        _DetailSection(
+                          title: 'Store Information',
+                          child: Column(
+                            children: [
+                              _StoreFactRow(
+                                icon: Icons.location_on_outlined,
+                                label: 'Address',
+                                value: details.address,
+                              ),
+                              _StoreFactRow(
+                                icon: Icons.schedule,
+                                label: 'Opening hours',
+                                value: details.openingHours,
+                              ),
+                              _StoreFactRow(
+                                icon: Icons.payments_outlined,
+                                label: 'Payment',
+                                value: details.paymentMethods,
+                              ),
+                              _StoreFactRow(
+                                icon: Icons.shopping_basket_outlined,
+                                label: 'Minimum order',
+                                value: details.minOrder,
+                              ),
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 16),
                         const Divider(),
@@ -215,6 +271,7 @@ class DetailScreen extends StatelessWidget {
                     separatorBuilder: (_, __) =>
                         const Divider(height: 1, indent: 16, endIndent: 16),
                     itemBuilder: (_, i) => _MenuItemTile(
+                      restaurant: title,
                       item: details.menuItems[i],
                     ),
                   ),
@@ -237,24 +294,54 @@ class DetailScreen extends StatelessWidget {
             ),
           ],
         ),
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: kPink,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
-          ),
-          child: const Text(
-            'View Menu',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
+        child: AnimatedBuilder(
+          animation: OrderStore.instance,
+          builder: (context, _) {
+            final count = OrderStore.instance.itemCount;
+            return ElevatedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartScreen()),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: kPink,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text(
+                count == 0 ? 'View Cart' : 'View Cart ($count)',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
   }
+}
+
+void _showAddedMessage(BuildContext context, String name) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('$name added to cart'),
+      duration: const Duration(seconds: 1),
+      action: SnackBarAction(
+        label: 'Cart',
+        textColor: Colors.white,
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const CartScreen()),
+        ),
+      ),
+      backgroundColor: kPink,
+    ),
+  );
 }
 
 class _InfoChip extends StatelessWidget {
@@ -269,18 +356,84 @@ class _InfoChip extends StatelessWidget {
       children: [
         Icon(icon, color: Colors.grey, size: 14),
         const SizedBox(width: 4),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.grey, fontSize: 12),
-        ),
+        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
       ],
     );
   }
 }
 
+class _DetailSection extends StatelessWidget {
+  final String title;
+  final Widget child;
+
+  const _DetailSection({required this.title, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        child,
+      ],
+    );
+  }
+}
+
+class _StoreFactRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _StoreFactRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, color: kPink, size: 18),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(color: Colors.black54, fontSize: 12),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _MenuItemTile extends StatelessWidget {
+  final String restaurant;
   final _MenuItemData item;
-  const _MenuItemTile({required this.item});
+  const _MenuItemTile({required this.restaurant, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -353,14 +506,27 @@ class _MenuItemTile extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: 32,
-            height: 32,
-            decoration: const BoxDecoration(
-              color: kPink,
-              shape: BoxShape.circle,
+          InkWell(
+            customBorder: const CircleBorder(),
+            onTap: () {
+              OrderStore.instance.addItem(
+                restaurant: restaurant,
+                name: item.name,
+                description: item.description,
+                priceLabel: item.price,
+                imageUrl: item.imageUrl,
+              );
+              _showAddedMessage(context, item.name);
+            },
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: const BoxDecoration(
+                color: kPink,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.add, color: Colors.white, size: 22),
             ),
-            child: const Icon(Icons.add, color: Colors.white, size: 20),
           ),
         ],
       ),
@@ -370,18 +536,31 @@ class _MenuItemTile extends StatelessWidget {
 
 class _RestaurantDetails {
   final String heroImageUrl;
+  final String subtitle;
   final String rating;
   final String deliveryTime;
   final String deliveryLabel;
   final String offerLabel;
+  final String about;
+  final String address;
+  final String openingHours;
+  final String paymentMethods;
+  final String minOrder;
   final List<_MenuItemData> menuItems;
 
   const _RestaurantDetails({
     required this.heroImageUrl,
+    this.subtitle = '',
     required this.rating,
     required this.deliveryTime,
     required this.deliveryLabel,
     required this.offerLabel,
+    this.about =
+        'Fresh meals and daily favorites prepared for quick delivery around Phnom Penh.',
+    this.address = 'Phnom Penh, Cambodia',
+    this.openingHours = 'Open daily, 8:00 AM - 10:00 PM',
+    this.paymentMethods = 'Cash, card, and ABA PAY',
+    this.minOrder = '\$5.00',
     required this.menuItems,
   });
 }
@@ -605,6 +784,345 @@ const Map<String, _RestaurantDetails> _restaurantDetails = {
         price: '\$10.99',
         imageUrl:
             'https://static.vecteezy.com/system/resources/thumbnails/036/409/436/small/ai-generated-savoring-korean-bbq-png.png',
+      ),
+    ],
+  ),
+  'Lucky Supermarket Sen Sok': _RestaurantDetails(
+    heroImageUrl: 'https://www.dfilucky.com/logo.png',
+    subtitle: 'Supermarket',
+    rating: '4.5',
+    deliveryTime: '15-40 min',
+    deliveryLabel: 'Free for first order',
+    offerLabel: '\$3 off \$17',
+    about:
+        'A grocery shop for fresh produce, snacks, drinks, pantry products, cleaning supplies, and everyday household needs.',
+    address: 'Sen Sok, Phnom Penh',
+    openingHours: 'Open daily, 7:00 AM - 10:00 PM',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: '\$5.00',
+    menuItems: [
+      _MenuItemData(
+        name: 'Fresh Vegetable Box',
+        description: 'Mixed greens, carrots, cucumber, and herbs',
+        price: '\$6.50',
+        imageUrl:
+            'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Fruit Basket',
+        description: 'Seasonal fruit for home or office',
+        price: '\$8.90',
+        imageUrl:
+            'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Milk and Cereal Set',
+        description: 'Breakfast essentials bundle',
+        price: '\$5.75',
+        imageUrl:
+            'https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Household Cleaning Pack',
+        description: 'Detergent, dish soap, and surface cleaner',
+        price: '\$9.20',
+        imageUrl:
+            'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Lucky Supermarket': _RestaurantDetails(
+    heroImageUrl: 'https://www.dfilucky.com/logo.png',
+    subtitle: 'Supermarket',
+    rating: '4.5',
+    deliveryTime: '25-50 min',
+    deliveryLabel: 'Free for first order',
+    offerLabel: '\$3 off \$17',
+    about:
+        'Popular supermarket selection with groceries, drinks, snacks, frozen items, and home essentials.',
+    address: 'Phnom Penh, Cambodia',
+    openingHours: 'Open daily, 7:00 AM - 10:00 PM',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: '\$5.00',
+    menuItems: [
+      _MenuItemData(
+        name: 'Grocery Starter Basket',
+        description: 'Rice, eggs, milk, vegetables, and snacks',
+        price: '\$18.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Drinks Bundle',
+        description: 'Water, juice, soda, and tea',
+        price: '\$7.50',
+        imageUrl:
+            'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'AEON': _RestaurantDetails(
+    heroImageUrl:
+        'https://yt3.googleusercontent.com/-GOuQcQWIOzYibpMEO9kYZzKhqergcwHThY4-oQvG4MK27HWHuMpBtFkRt7rluGiFsvuJAeKvA=s900-c-k-c0x00ffffff-no-rj',
+    subtitle: 'Convenience and groceries',
+    rating: '4.1',
+    deliveryTime: '5-30 min',
+    deliveryLabel: 'Fast delivery',
+    offerLabel: '\$2 off \$12',
+    about:
+        'Convenience store essentials including ready-to-eat food, beverages, snacks, personal care, and household basics.',
+    address: 'AEON area, Phnom Penh',
+    openingHours: 'Open daily, 8:00 AM - 11:00 PM',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: '\$4.00',
+    menuItems: [
+      _MenuItemData(
+        name: 'Ready Meal Set',
+        description: 'Quick lunch or dinner option',
+        price: '\$4.25',
+        imageUrl:
+            'https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Snack and Drink Combo',
+        description: 'Chips, chocolate, and bottled drink',
+        price: '\$3.75',
+        imageUrl:
+            'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Aeon MaxValu Supermarket (Toul...)': _RestaurantDetails(
+    heroImageUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpy52L4vPX3zzsTDFoP6foIcQNeYAIhDaiVQ&s',
+    subtitle: 'Supermarket',
+    rating: '4.3',
+    deliveryTime: '10-35 min',
+    deliveryLabel: 'Scheduled delivery',
+    offerLabel: 'Daily essentials',
+    about:
+        'Neighborhood supermarket for fresh food, imported grocery items, chilled products, and household supplies.',
+    address: 'Toul Kork, Phnom Penh',
+    openingHours: 'Open daily, 8:00 AM - 10:00 PM',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: '\$5.00',
+    menuItems: [
+      _MenuItemData(
+        name: 'Fresh Food Set',
+        description: 'Vegetables, protein, and cooking basics',
+        price: '\$12.50',
+        imageUrl:
+            'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Imported Snacks',
+        description: 'Sweet and salty snack selection',
+        price: '\$6.40',
+        imageUrl:
+            'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Aeon MaxValu Supermarl...': _RestaurantDetails(
+    heroImageUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpy52L4vPX3zzsTDFoP6foIcQNeYAIhDaiVQ&s',
+    subtitle: 'Supermarket',
+    rating: '4.3',
+    deliveryTime: '10-35 min',
+    deliveryLabel: 'Scheduled delivery',
+    offerLabel: 'Daily essentials',
+    about:
+        'Neighborhood supermarket for fresh food, imported grocery items, chilled products, and household supplies.',
+    address: 'Phnom Penh, Cambodia',
+    openingHours: 'Open daily, 8:00 AM - 10:00 PM',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: '\$5.00',
+    menuItems: [
+      _MenuItemData(
+        name: 'Daily Essentials Basket',
+        description: 'Core grocery products for the week',
+        price: '\$15.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Chip Mong Supermarket...': _RestaurantDetails(
+    heroImageUrl:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqWb3y6VEA-huZg6U1MWrGJElHtyM4UsEoPA&s',
+    subtitle: 'Supermarket',
+    rating: '4.4',
+    deliveryTime: '15-45 min',
+    deliveryLabel: 'Grocery delivery',
+    offerLabel: 'Popular shop',
+    about:
+        'Supermarket selection with fresh ingredients, snacks, beverages, frozen goods, and home products.',
+    address: 'Phnom Penh, Cambodia',
+    openingHours: 'Open daily, 8:00 AM - 10:00 PM',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: '\$5.00',
+    menuItems: [
+      _MenuItemData(
+        name: 'Family Grocery Pack',
+        description: 'Rice, vegetables, fruit, drinks, and snacks',
+        price: '\$22.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Khmer New Year': _RestaurantDetails(
+    heroImageUrl:
+        'https://static.vecteezy.com/system/resources/thumbnails/043/030/930/small/happy-khmer-new-year-vector.jpg',
+    subtitle: 'Seasonal celebration',
+    rating: '4.6',
+    deliveryTime: '20-45 min',
+    deliveryLabel: 'Seasonal items',
+    offerLabel: 'Holiday deals',
+    about:
+        'Festival picks for Khmer New Year, including snacks, drinks, gifts, decorations, and family sharing items.',
+    address: 'Available in Phnom Penh',
+    openingHours: 'Seasonal collection',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: '\$3.00',
+    menuItems: [
+      _MenuItemData(
+        name: 'New Year Snack Box',
+        description: 'Sweet and salty snacks for sharing',
+        price: '\$9.90',
+        imageUrl:
+            'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Family Drinks Pack',
+        description: 'Assorted soft drinks and bottled water',
+        price: '\$7.25',
+        imageUrl:
+            'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Groceries': _RestaurantDetails(
+    heroImageUrl:
+        'https://i.pinimg.com/1200x/60/c7/b3/60c7b3e11b79c1529b8741048f526b9d.jpg',
+    subtitle: 'Daily essentials category',
+    rating: '4.5',
+    deliveryTime: '15-45 min',
+    deliveryLabel: 'Many shops available',
+    offerLabel: 'Fresh picks',
+    about:
+        'Browse grocery staples, fresh produce, dairy, pantry items, snacks, drinks, and household supplies.',
+    address: 'Multiple stores near your selected location',
+    openingHours: 'Hours vary by store',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: 'Varies by store',
+    menuItems: [
+      _MenuItemData(
+        name: 'Vegetables',
+        description: 'Fresh greens and cooking ingredients',
+        price: 'From \$1.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Fruit',
+        description: 'Seasonal fruit selections',
+        price: 'From \$2.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Convenience': _RestaurantDetails(
+    heroImageUrl:
+        'https://i.pinimg.com/1200x/37/58/fd/3758fd8c93654ec516d0635134a076d2.jpg',
+    subtitle: 'Quick essentials category',
+    rating: '4.4',
+    deliveryTime: '5-30 min',
+    deliveryLabel: 'Fast delivery',
+    offerLabel: 'Quick buys',
+    about:
+        'Fast access to drinks, snacks, ready meals, personal care items, and last-minute household needs.',
+    address: 'Multiple stores near your selected location',
+    openingHours: 'Hours vary by store',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: 'Varies by store',
+    menuItems: [
+      _MenuItemData(
+        name: 'Ready Meals',
+        description: 'Quick food for lunch, dinner, or late night',
+        price: 'From \$2.50',
+        imageUrl:
+            'https://images.unsplash.com/photo-1543352634-a1c51d9f1fa7?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Snacks',
+        description: 'Chips, chocolate, and biscuits',
+        price: 'From \$1.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Beverages & Alcohol': _RestaurantDetails(
+    heroImageUrl:
+        'https://i.pinimg.com/736x/86/2d/31/862d311a95bdcd29f191d14fb2cbb780.jpg',
+    subtitle: 'Drinks category',
+    rating: '4.3',
+    deliveryTime: '10-35 min',
+    deliveryLabel: 'Age check may apply',
+    offerLabel: 'Cold drinks',
+    about:
+        'Water, juice, coffee, tea, soda, and selected alcoholic beverages from nearby shops.',
+    address: 'Multiple stores near your selected location',
+    openingHours: 'Hours vary by store',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: 'Varies by store',
+    menuItems: [
+      _MenuItemData(
+        name: 'Soft Drink Pack',
+        description: 'Assorted cold drinks',
+        price: 'From \$3.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Coffee and Tea',
+        description: 'Canned, bottled, and instant options',
+        price: 'From \$1.50',
+        imageUrl:
+            'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=400&q=80',
+      ),
+    ],
+  ),
+  'Bakery': _RestaurantDetails(
+    heroImageUrl:
+        'https://i.pinimg.com/1200x/3f/29/6f/3f296f9a562dfc4ec090de048f67b59b.jpg',
+    subtitle: 'Fresh bakery category',
+    rating: '4.5',
+    deliveryTime: '15-35 min',
+    deliveryLabel: 'Fresh baked',
+    offerLabel: 'Bakery picks',
+    about:
+        'Bread, pastries, cakes, and breakfast bakery items from grocery and bakery partners.',
+    address: 'Multiple stores near your selected location',
+    openingHours: 'Hours vary by store',
+    paymentMethods: 'Cash, card, and ABA PAY',
+    minOrder: 'Varies by store',
+    menuItems: [
+      _MenuItemData(
+        name: 'Croissant Box',
+        description: 'Buttery croissants for breakfast or tea time',
+        price: 'From \$4.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=400&q=80',
+      ),
+      _MenuItemData(
+        name: 'Fresh Bread',
+        description: 'Soft bread and rolls',
+        price: 'From \$2.00',
+        imageUrl:
+            'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=400&q=80',
       ),
     ],
   ),

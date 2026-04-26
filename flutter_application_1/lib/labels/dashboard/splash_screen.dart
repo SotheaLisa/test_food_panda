@@ -1,4 +1,3 @@
-
 // class SplashScreen extends StatefulWidget {
 //   const SplashScreen({super.key});
 
@@ -92,6 +91,7 @@
 // }
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/RestraurantCard widget/constants/color.dart';
 import 'welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -119,7 +119,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFF0087),
+      backgroundColor: kPink,
       body: Center(
         child: Image.network(
           'https://i.pinimg.com/1200x/8e/9b/38/8e9b384c34fc7c1c8bd4edc8737878c1.jpg',

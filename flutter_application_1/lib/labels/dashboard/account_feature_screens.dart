@@ -96,9 +96,7 @@ class AddressesScreen extends StatelessWidget {
       child: _AddressesEmptyState(
         onAddPressed: () {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Add address form is not added yet.'),
-            ),
+            const SnackBar(content: Text('Add address form is not added yet.')),
           );
         },
       ),
@@ -261,10 +259,7 @@ class _FavouritesEmptyState extends StatelessWidget {
                 ),
                 child: const Text(
                   'Let\'s find some favourites',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
               ),
             ),
@@ -325,10 +320,7 @@ class _AddressesEmptyState extends StatelessWidget {
                 ),
                 child: const Text(
                   'Add New Address',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
               ),
             ),
@@ -502,7 +494,7 @@ class _BagIllustration extends StatelessWidget {
               width: 108,
               height: 122,
               decoration: BoxDecoration(
-                color: const Color(0xFFFFB3C7),
+                color: kPinkLight,
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: [
                   BoxShadow(
@@ -533,7 +525,7 @@ class _BagIllustration extends StatelessWidget {
                   width: 26,
                   height: 26,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFCC7A93), width: 3),
+                    border: Border.all(color: kPink, width: 3),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -542,7 +534,7 @@ class _BagIllustration extends StatelessWidget {
                   width: 26,
                   height: 26,
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFCC7A93), width: 3),
+                    border: Border.all(color: kPink, width: 3),
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
@@ -572,20 +564,12 @@ class _HeartIllustration extends StatelessWidget {
           ),
           Positioned(
             bottom: 0,
-            child: Icon(
-              Icons.favorite,
-              size: 130,
-              color: Colors.pink.shade200,
-            ),
+            child: Icon(Icons.favorite, size: 130, color: kPinkLight),
           ),
           Positioned(
             left: 34,
             top: 54,
-            child: Icon(
-              Icons.favorite,
-              size: 22,
-              color: Colors.pink.shade300,
-            ),
+            child: Icon(Icons.favorite, size: 22, color: kPink),
           ),
         ],
       ),
@@ -648,11 +632,7 @@ class _AddressIllustration extends StatelessWidget {
           ),
           Positioned(
             top: 6,
-            child: Icon(
-              Icons.location_on,
-              size: 112,
-              color: Colors.pink.shade300,
-            ),
+            child: Icon(Icons.location_on, size: 112, color: kPink),
           ),
         ],
       ),

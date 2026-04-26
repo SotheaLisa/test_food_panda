@@ -4,35 +4,43 @@ import 'package:flutter_application_1/etc/constant.dart';
 import 'package:flutter_application_1/components/restaurant.dart';
 import 'package:flutter_application_1/labels/dashboard/search_screen.dart';
 
+import 'detail_screen.dart';
 
 class GroceryScreen extends StatelessWidget {
   const GroceryScreen({super.key});
+
+  static void _openDetail(BuildContext context, String title) {
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).push(MaterialPageRoute(builder: (_) => DetailScreen(title: title)));
+  }
 
   static const List<Map<String, String>> _categories = [
     {
       'label': 'Khmer New\nYear',
       'image':
-          'https://static.vecteezy.com/system/resources/thumbnails/043/030/930/small/happy-khmer-new-year-vector.jpg'
+          'https://static.vecteezy.com/system/resources/thumbnails/043/030/930/small/happy-khmer-new-year-vector.jpg',
     },
     {
       'label': 'Groceries',
       'image':
-          'https://i.pinimg.com/1200x/60/c7/b3/60c7b3e11b79c1529b8741048f526b9d.jpg'
+          'https://i.pinimg.com/1200x/60/c7/b3/60c7b3e11b79c1529b8741048f526b9d.jpg',
     },
     {
       'label': 'Convenience',
       'image':
-          'https://i.pinimg.com/1200x/37/58/fd/3758fd8c93654ec516d0635134a076d2.jpg'
+          'https://i.pinimg.com/1200x/37/58/fd/3758fd8c93654ec516d0635134a076d2.jpg',
     },
     {
       'label': 'Beverages\n& Alcohol',
       'image':
-          'https://i.pinimg.com/736x/86/2d/31/862d311a95bdcd29f191d14fb2cbb780.jpg'
+          'https://i.pinimg.com/736x/86/2d/31/862d311a95bdcd29f191d14fb2cbb780.jpg',
     },
     {
       'label': 'Bakery',
       'image':
-          'https://i.pinimg.com/1200x/3f/29/6f/3f296f9a562dfc4ec090de048f67b59b.jpg'
+          'https://i.pinimg.com/1200x/3f/29/6f/3f296f9a562dfc4ec090de048f67b59b.jpg',
     },
   ];
 
@@ -41,25 +49,24 @@ class GroceryScreen extends StatelessWidget {
       'name': 'Chip Mong\nSupermarket...',
       'time': '15-45 min',
       'image':
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqWb3y6VEA-huZg6U1MWrGJElHtyM4UsEoPA&s'
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqWb3y6VEA-huZg6U1MWrGJElHtyM4UsEoPA&s',
     },
     {
       'name': 'Lucky\nSupermarket',
       'time': '25-50 min',
-      'image':
-          'https://www.dfilucky.com/logo.png'
+      'image': 'https://www.dfilucky.com/logo.png',
     },
     {
       'name': 'AEON',
       'time': '5-30 min',
       'image':
-          'https://yt3.googleusercontent.com/-GOuQcQWIOzYibpMEO9kYZzKhqergcwHThY4-oQvG4MK27HWHuMpBtFkRt7rluGiFsvuJAeKvA=s900-c-k-c0x00ffffff-no-rj'
+          'https://yt3.googleusercontent.com/-GOuQcQWIOzYibpMEO9kYZzKhqergcwHThY4-oQvG4MK27HWHuMpBtFkRt7rluGiFsvuJAeKvA=s900-c-k-c0x00ffffff-no-rj',
     },
     {
       'name': 'Aeon MaxValu\nSupermarl...',
       'time': '10-35 min',
       'image':
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpy52L4vPX3zzsTDFoP6foIcQNeYAIhDaiVQ&s'
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpy52L4vPX3zzsTDFoP6foIcQNeYAIhDaiVQ&s',
     },
   ];
 
@@ -83,53 +90,55 @@ class GroceryScreen extends StatelessWidget {
                     height: 125,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 16),
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(width: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemCount: _categories.length,
                       itemBuilder: (_, i) {
                         final c = _categories[i];
-                        return SizedBox(
-                          width: 80,
-                          // FIX: Column inside SizedBox with fixed width —
-                          // no more bottom overflow because height is set on parent
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 80,
-                                height: 80,
-                                decoration: BoxDecoration(
-                                  color: Colors.orange.shade50,
-                                  borderRadius:
-                                      BorderRadius.circular(16),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.network(
-                                    c['image']!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder:
-                                        (context, error, stackTrace) {
-                                      return Icon(
-                                        Icons.broken_image_outlined,
-                                        color: Colors.orange.shade700,
-                                        size: 36,
-                                      );
-                                    },
+                        final title = c['label']!.replaceAll('\n', ' ');
+                        return GestureDetector(
+                          onTap: () => _openDetail(context, title),
+                          behavior: HitTestBehavior.opaque,
+                          child: SizedBox(
+                            width: 80,
+                            // FIX: Column inside SizedBox with fixed width —
+                            // no more bottom overflow because height is set on parent
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade50,
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Image.network(
+                                      c['image']!,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Icon(
+                                              Icons.broken_image_outlined,
+                                              color: Colors.orange.shade700,
+                                              size: 36,
+                                            );
+                                          },
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 5),
-                              Text(
-                                c['label']!,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 10),
-                              ),
-                            ],
+                                const SizedBox(height: 5),
+                                Text(
+                                  c['label']!,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 10),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -144,7 +153,9 @@ class GroceryScreen extends StatelessWidget {
                     child: Text(
                       AppConstants.popularShops,
                       style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -155,66 +166,72 @@ class GroceryScreen extends StatelessWidget {
                     height: 155,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 16),
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(width: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemCount: _shops.length,
                       itemBuilder: (_, i) {
                         final s = _shops[i];
-                        return SizedBox(
-                          width: 100,
-                          // FIX: SizedBox + Column mainAxisSize.min
-                          // stops the bottom overflow
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.circular(16),
-                                  border: Border.all(
-                                      color: kPink.withValues(alpha: 0.3)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Image.network(
-                                      s['image']!,
-                                      fit: BoxFit.contain,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Icon(
-                                          Icons.store,
-                                          color: kPink,
-                                          size: 44,
-                                        );
-                                      },
+                        final title = s['name']!.replaceAll('\n', ' ');
+                        return GestureDetector(
+                          onTap: () => _openDetail(context, title),
+                          behavior: HitTestBehavior.opaque,
+                          child: SizedBox(
+                            width: 100,
+                            // FIX: SizedBox + Column mainAxisSize.min
+                            // stops the bottom overflow
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(
+                                      color: kPink.withValues(alpha: 0.3),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.network(
+                                        s['image']!,
+                                        fit: BoxFit.contain,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return const Icon(
+                                                Icons.store,
+                                                color: kPink,
+                                                size: 44,
+                                              );
+                                            },
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                s['name']!,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                const SizedBox(height: 6),
+                                Text(
+                                  s['name']!,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
                                     fontSize: 11,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                              const SizedBox(height: 2),
-                              Text(
-                                s['time']!,
-                                style: const TextStyle(
-                                    fontSize: 10, color: Colors.grey),
-                              ),
-                            ],
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  s['time']!,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
@@ -229,7 +246,9 @@ class GroceryScreen extends StatelessWidget {
                     child: Text(
                       AppConstants.dailyEssentials,
                       style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -241,8 +260,9 @@ class GroceryScreen extends StatelessWidget {
                     rating: 4.5,
                     isFreeDelivery: true,
                     discount: AppConstants.discountOff17,
-                    imageUrl:
-                        'https://www.dfilucky.com/logo.png',
+                    imageUrl: 'https://www.dfilucky.com/logo.png',
+                    onTap: () =>
+                        _openDetail(context, 'Lucky Supermarket Sen Sok'),
                   ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
                   RestaurantCard(
@@ -252,6 +272,10 @@ class GroceryScreen extends StatelessWidget {
                     rating: 4.3,
                     imageUrl:
                         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpy52L4vPX3zzsTDFoP6foIcQNeYAIhDaiVQ&s',
+                    onTap: () => _openDetail(
+                      context,
+                      'Aeon MaxValu Supermarket (Toul...)',
+                    ),
                   ),
                   const Divider(height: 1, indent: 16, endIndent: 16),
                   RestaurantCard(
@@ -262,6 +286,7 @@ class GroceryScreen extends StatelessWidget {
                     discount: '\$2 off \$12',
                     imageUrl:
                         'https://yt3.googleusercontent.com/-GOuQcQWIOzYibpMEO9kYZzKhqergcwHThY4-oQvG4MK27HWHuMpBtFkRt7rluGiFsvuJAeKvA=s900-c-k-c0x00ffffff-no-rj',
+                    onTap: () => _openDetail(context, 'AEON'),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -304,8 +329,11 @@ class _GroceryHeader extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 6),
                         child: Row(
                           children: [
-                            Icon(Icons.location_on_outlined,
-                                color: Colors.white, size: 20),
+                            Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                             SizedBox(width: 6),
                             Expanded(
                               child: Text(
@@ -324,8 +352,11 @@ class _GroceryHeader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(Icons.favorite_border,
-                      color: Colors.white, size: 24),
+                  const Icon(
+                    Icons.favorite_border,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
@@ -499,10 +530,7 @@ class _LocationBottomSheet extends StatelessWidget {
                         SizedBox(height: 4),
                         Text(
                           'Phnom Penh',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black54,
-                          ),
+                          style: TextStyle(fontSize: 15, color: Colors.black54),
                         ),
                       ],
                     ),

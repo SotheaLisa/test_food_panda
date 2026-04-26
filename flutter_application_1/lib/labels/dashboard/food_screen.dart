@@ -56,8 +56,9 @@ class FoodScreen extends StatelessWidget {
                 Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
-                    borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(20)),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(20),
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +75,9 @@ class FoodScreen extends StatelessWidget {
                         child: Text(
                           "🐼 Panda Picks",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       SizedBox(height: 12),
@@ -85,7 +88,9 @@ class FoodScreen extends StatelessWidget {
                         child: Text(
                           "⭐ Exclusive Deals",
                           style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       SizedBox(height: 12),
@@ -133,8 +138,11 @@ class _FoodHeader extends StatelessWidget {
                         padding: EdgeInsets.symmetric(vertical: 6),
                         child: Row(
                           children: [
-                            Icon(Icons.location_on_outlined,
-                                color: Colors.white, size: 20),
+                            Icon(
+                              Icons.location_on_outlined,
+                              color: Colors.white,
+                              size: 20,
+                            ),
                             SizedBox(width: 6),
                             Expanded(
                               child: Text(
@@ -153,8 +161,11 @@ class _FoodHeader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(Icons.favorite_border,
-                      color: Colors.white, size: 24),
+                  const Icon(
+                    Icons.favorite_border,
+                    color: Colors.white,
+                    size: 24,
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
@@ -175,7 +186,9 @@ class _FoodHeader extends StatelessWidget {
                           hintText: AppConstants.searchFood,
                           border: InputBorder.none,
                           hintStyle: TextStyle(
-                              color: Colors.grey, fontSize: 14),
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ),
@@ -317,10 +330,7 @@ class _FoodLocationBottomSheet extends StatelessWidget {
                         SizedBox(height: 4),
                         Text(
                           'Phnom Penh',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.black54,
-                          ),
+                          style: TextStyle(fontSize: 15, color: Colors.black54),
                         ),
                       ],
                     ),
@@ -371,22 +381,27 @@ class _HeroBanner extends StatelessWidget {
                 Text(
                   AppConstants.heroBannerText,
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      height: 1.3),
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    height: 1.3,
+                  ),
                 ),
                 SizedBox(height: 10),
                 // FIX: mainAxisSize.min so the Row only takes needed space
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(AppConstants.startOrdering,
-                        style:
-                            TextStyle(color: Colors.white, fontSize: 13)),
+                    Text(
+                      AppConstants.startOrdering,
+                      style: TextStyle(color: Colors.white, fontSize: 13),
+                    ),
                     SizedBox(width: 4),
-                    Icon(Icons.arrow_forward_ios,
-                        color: Colors.white, size: 12),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.white,
+                      size: 12,
+                    ),
                   ],
                 ),
               ],
@@ -397,11 +412,10 @@ class _HeroBanner extends StatelessWidget {
             width: 110,
             height: 100,
             decoration: BoxDecoration(
-              color: Colors.pink.shade300,
+              color: kPinkLight,
               borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(Icons.local_pizza,
-                color: Colors.white, size: 50),
+            child: const Icon(Icons.local_pizza, color: Colors.white, size: 50),
           ),
         ],
       ),
@@ -414,10 +428,7 @@ class _CategoryIconRow extends StatelessWidget {
   const _CategoryIconRow();
 
   static const List<Map<String, Object>> _cats = [
-    {
-      'label': 'Offers',
-      'icon': Icons.percent,
-    },
+    {'label': 'Offers', 'icon': Icons.percent},
     {
       'label': 'Chinese\nFood',
       'image':
@@ -428,10 +439,7 @@ class _CategoryIconRow extends StatelessWidget {
       'image':
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqq5w7Vj3st2zOkK6Yx57kAvh1PQ3axHQkDg&s',
     },
-    {
-      'label': 'Lucky',
-      'image': 'https://www.dfilucky.com/logo.png',
-    },
+    {'label': 'Lucky', 'image': 'https://www.dfilucky.com/logo.png'},
   ];
 
   @override
@@ -495,7 +503,6 @@ class _CategoryIconRow extends StatelessWidget {
   }
 }
 
-
 // ── Food Type Grid ────────────────────────────────────────────────────────────
 class _FoodTypeGrid extends StatelessWidget {
   const _FoodTypeGrid();
@@ -504,22 +511,22 @@ class _FoodTypeGrid extends StatelessWidget {
     {
       'label': 'Pizza',
       'image':
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSA_HV4uhKwH_y2vk0XoPRQzZrhzVXbQrvpg&s'
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSA_HV4uhKwH_y2vk0XoPRQzZrhzVXbQrvpg&s',
     },
     {
       'label': 'Korean',
       'image':
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7AOachJFbYRT9MNE20zvZL2V2aWIxBRxI7w&s'
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT7AOachJFbYRT9MNE20zvZL2V2aWIxBRxI7w&s',
     },
     {
       'label': 'Tea & Coffee',
       'image':
-          'https://t4.ftcdn.net/jpg/06/61/30/11/360_F_661301175_93tzscJly2aU5aMIvprt9Dn9CCL53Fvt.jpg'
+          'https://t4.ftcdn.net/jpg/06/61/30/11/360_F_661301175_93tzscJly2aU5aMIvprt9Dn9CCL53Fvt.jpg',
     },
     {
       'label': 'Burgers',
       'image':
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScYtEyzbggkdu_V17OP3zgM5xv96YiI7vqwg&s'
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScYtEyzbggkdu_V17OP3zgM5xv96YiI7vqwg&s',
     },
   ];
 
@@ -569,7 +576,6 @@ class _FoodTypeGrid extends StatelessWidget {
     );
   }
 }
-
 
 // ── Promo Cards ───────────────────────────────────────────────────────────────
 
@@ -639,14 +645,14 @@ class _PromoCard extends StatelessWidget {
             right: 0,
             child: Container(
               color: headerBg,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               child: Text(
                 headerText,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12),
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -659,10 +665,11 @@ class _PromoCard extends StatelessWidget {
             child: Text(
               discount,
               style: const TextStyle(
-                  color: kPink,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  height: 1.1),
+                color: kPink,
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                height: 1.1,
+              ),
             ),
           ),
           Positioned(
@@ -671,8 +678,7 @@ class _PromoCard extends StatelessWidget {
             right: 10,
             child: Text(
               subtitle,
-              style:
-                  const TextStyle(color: Colors.black54, fontSize: 11),
+              style: const TextStyle(color: Colors.black54, fontSize: 11),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -681,21 +687,25 @@ class _PromoCard extends StatelessWidget {
             left: 10,
             child: Container(
               decoration: BoxDecoration(
-                  color: kPink,
-                  borderRadius: BorderRadius.circular(20)),
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 8, vertical: 4),
+                color: kPink,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('code ',
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 10)),
-                  Text(code,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10)),
+                  const Text(
+                    'code ',
+                    style: TextStyle(color: Colors.white, fontSize: 10),
+                  ),
+                  Text(
+                    code,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -735,8 +745,7 @@ class _PandaPicksList extends StatelessWidget {
             return GestureDetector(
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (_) => DetailScreen(title: p.name)),
+                MaterialPageRoute(builder: (_) => DetailScreen(title: p.name)),
               ),
               child: Container(
                 width: 108,
@@ -745,8 +754,7 @@ class _PandaPicksList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.grey.shade200),
                 ),
-                padding: const EdgeInsets.symmetric(
-                    vertical: 8, horizontal: 6),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -755,33 +763,32 @@ class _PandaPicksList extends StatelessWidget {
                       width: 44,
                       height: 44,
                       decoration: const BoxDecoration(
-                          color: kPinkLight, shape: BoxShape.circle),
+                        color: kPinkLight,
+                        shape: BoxShape.circle,
+                      ),
                       child: ClipOval(
                         child: p.imageUrl.isEmpty
-                            ? const Icon(
-                                Icons.fastfood,
-                                color: kPink,
-                                size: 22,
-                              )
+                            ? const Icon(Icons.fastfood, color: kPink, size: 22)
                             : Image.network(
                                 p.imageUrl,
                                 headers: _networkImageHeaders(p.imageUrl),
                                 fit: BoxFit.contain,
                                 errorBuilder: (context, error, stackTrace) {
-                                  final fallbackUrl =
-                                      _fallbackImageUrl(p.imageUrl);
+                                  final fallbackUrl = _fallbackImageUrl(
+                                    p.imageUrl,
+                                  );
                                   if (fallbackUrl != null) {
                                     return Image.network(
                                       fallbackUrl,
                                       fit: BoxFit.contain,
                                       errorBuilder:
                                           (context, error, stackTrace) {
-                                        return const Icon(
-                                          Icons.fastfood,
-                                          color: kPink,
-                                          size: 22,
-                                        );
-                                      },
+                                            return const Icon(
+                                              Icons.fastfood,
+                                              color: kPink,
+                                              size: 22,
+                                            );
+                                          },
                                     );
                                   }
 
@@ -801,15 +808,16 @@ class _PandaPicksList extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 10),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       p.deliveryTime,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                          color: Colors.grey, fontSize: 9),
+                      style: const TextStyle(color: Colors.grey, fontSize: 9),
                     ),
                   ],
                 ),
@@ -852,7 +860,8 @@ class _ExclusiveList extends StatelessWidget {
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (_) => DetailScreen(title: item.name)),
+                  builder: (_) => DetailScreen(title: item.name),
+                ),
               ),
               child: Container(
                 width: 220,
@@ -886,14 +895,14 @@ class _ExclusiveList extends StatelessWidget {
                               headers: _networkImageHeaders(item.imageUrl),
                               fit: BoxFit.contain,
                               errorBuilder: (context, error, stackTrace) {
-                                final fallbackUrl =
-                                    _fallbackImageUrl(item.imageUrl);
+                                final fallbackUrl = _fallbackImageUrl(
+                                  item.imageUrl,
+                                );
                                 if (fallbackUrl != null) {
                                   return Image.network(
                                     fallbackUrl,
                                     fit: BoxFit.contain,
-                                    errorBuilder:
-                                        (context, error, stackTrace) {
+                                    errorBuilder: (context, error, stackTrace) {
                                       return const Icon(
                                         Icons.star,
                                         color: kPink,
@@ -938,8 +947,11 @@ class _ExclusiveList extends StatelessWidget {
                           const SizedBox(height: 6),
                           Row(
                             children: [
-                              const Icon(Icons.star,
-                                  color: Colors.amber, size: 14),
+                              const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                                size: 14,
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 item.rating.toStringAsFixed(1),
